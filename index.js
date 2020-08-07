@@ -44,7 +44,6 @@ const Rider = require('./models/rider.model');
 const Motorcycle = require('./models/motorcycle.model');
 
 
-//DONE
 // Question 1 - Create a HTTP Request to add a riders in the database :
 // When we create a rider he doesn't have a score yet.
 app.post('/riders', (req, res) => {
@@ -63,7 +62,6 @@ app.post('/riders', (req, res) => {
 });
 
 
-//DONE
 // Question 2 - Create a HTTP Request to fetch all the riders :
 app.get('/riders', (req, res) => {
     Rider.find({}, (err, allRiders) => {
@@ -75,7 +73,6 @@ app.get('/riders', (req, res) => {
 });
 
 
-//DONE
 // Question 3 - Create a HTTP Request to fetch one rider :
 app.get("/riders/:id", (req, res) => {
     Rider.findById(req.params.id, (err, rider) => {
@@ -87,7 +84,6 @@ app.get("/riders/:id", (req, res) => {
 });
 
 
-//DONE
 // Question 4 - Create a HTTP Request to update firstName or/and lastName of a rider :
 app.put('/riders/:id', (req, res) => {
     const elementsToUpdate = {
@@ -95,7 +91,7 @@ app.put('/riders/:id', (req, res) => {
         lastName: req.body.lastName
     }
 
-    Rider.findByIdAndUpdate(req.params.id, elementsToUpdate, (err, updateRider) => {
+    Rider.findByIdAndUpdate(req.params.id, elementsToUpdate, {new: true}, (err, updateRider) => {
         if (err) {
             res.send(err);
         }
@@ -104,10 +100,9 @@ app.put('/riders/:id', (req, res) => {
 });
 
 
-//DONE
 // Question 5 - Create a HTTP Request to ADD score of a rider :
 app.put('/riders/score/:id', (req, res) => {
-    Rider.findOneAndUpdate({_id: req.params.id}, {score: req.body.score}, (err, scoreBoard) => {
+    Rider.findOneAndUpdate({_id: req.params.id}, {$addToSet: {score: req.body.score}}, {new: true}, (err, scoreBoard) => {
         if (err) {
             res.send(err);
         }
@@ -116,7 +111,6 @@ app.put('/riders/score/:id', (req, res) => {
 });
 
 
-//DONE
 // Question 6 - Create a HTTP Request to delete one rider :
 app.delete("/riders/:id", (req, res) => {
     Rider.findByIdAndDelete(req.params.id, (err, rider) => {
@@ -128,7 +122,7 @@ app.delete("/riders/:id", (req, res) => {
 });
 
 
-//DONE
+//NOT ABLE TO CHECK IF THE RIDER'S ID ALREADY EXISTS IN RIDER MODEL
 // Question 7 - Create a HTTP Request to create motorcycles :
 // For create a motorcycle you will need to create the model first.
 app.post('/motorcycles', (req, res) => {
@@ -143,12 +137,11 @@ app.post('/motorcycles', (req, res) => {
         if (err) {
             res.send(err);
         }
-        res.json(addMmotorcycle);
+        res.json(addMotorcycle);
     });
 });
 
 
-//DONE
 // Question 8 - Create a HTTP Request to fetch all the motorcycles:
 app.get('/motorcycles', (req, res) => {
     Motorcycle.find({}, (err, motorcycles) => {
@@ -160,7 +153,6 @@ app.get('/motorcycles', (req, res) => {
 });
 
 
-//DONE
 // Question 9 - Create a HTTP Request to fetch all the motorcycles associate to one rider:
 app.get('/motorcycles/riders/:riderId', (req, res) => {
     let id = req.params.riderId;
@@ -173,15 +165,15 @@ app.get('/motorcycles/riders/:riderId', (req, res) => {
 });
 
 
+//AGGREGATION?
 // BONUS 10 - Create a HTTP Request to to get the riders ranking
-app.get('/riders/ranking', (req, res) => {
-
-    
-    // if (err) {
-    //     res.send(err);
-    // }
-    // res.json(allMotor);
-});
+// app.get('/riders/ranking', (req, res) => {
+//     Rider.aggregate([
+//         {$match: {riderId : req.body.riderId}},
+//         {$group: {_id: $}}
+//     ])
+//     //
+// });
 
 
 //
